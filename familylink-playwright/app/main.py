@@ -73,7 +73,7 @@ async def index():
     """Serve the main authentication interface."""
     html_content = """
 <!DOCTYPE html>
-<html lang="fr">
+<html lang="en">
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
@@ -226,28 +226,31 @@ async def index():
 <body>
     <div class="container">
         <h1>🔐 Google Family Link</h1>
-        <p class="subtitle">Service d'authentification pour l'intégration Home Assistant</p>
+        <p class="subtitle">Authentication service for Home Assistant integration</p>
 
         <div id="status" class="status"></div>
 
         <button id="authButton" onclick="startAuth()">
-            Démarrer l'authentification
+            🚀 Start Authentication
         </button>
 
         <div class="instructions">
             <h3>📋 Instructions</h3>
             <ol>
-                <li>Cliquez sur "Démarrer l'authentification"</li>
-                <li>Une fenêtre de navigateur va s'ouvrir avec la page de connexion Google</li>
-                <li>Connectez-vous avec votre compte Google</li>
-                <li>Complétez la validation en deux étapes si demandé</li>
-                <li>Attendez le message de succès</li>
-                <li>Retournez dans Home Assistant pour terminer la configuration</li>
+                <li>Click <strong>"Start Authentication"</strong> below</li>
+                <li>Open the <strong>noVNC browser viewer</strong> to see the Google login page:
+                    <br><a id="novncLink" href="#" target="_blank" style="color: #667eea; font-weight: bold; font-size: 15px;">📺 Open Browser Viewer (noVNC)</a>
+                    <br><span style="color: #999; font-size: 12px;">Password: <code>familylink</code></span>
+                </li>
+                <li>Sign in with your Google account in the noVNC viewer</li>
+                <li>Complete two-factor authentication if prompted</li>
+                <li>Wait for the success message on this page</li>
+                <li>Return to Home Assistant to finish configuration</li>
             </ol>
         </div>
 
         <div class="info-box">
-            💡 <strong>Note:</strong> La fenêtre du navigateur peut mettre quelques secondes à apparaître. Ne fermez pas cette page pendant l'authentification.
+            💡 <strong>Important:</strong> The browser runs <em>inside the container</em>, not on your computer. You must use the <strong>noVNC viewer</strong> (link above) to see and interact with it. No VNC client needed — it works in any web browser.
         </div>
     </div>
 
@@ -255,37 +258,64 @@ async def index():
         let sessionId = null;
         let statusCheckInterval = null;
 
+        // Auto-detect noVNC URL based on current hostname
+        function getNoVncUrl() {
+            const host = window.location.hostname;
+            return `http://${host}:6080/vnc.html?autoconnect=true&password=familylink`;
+        }
+
+        // Set noVNC link on page load
+        window.addEventListener('load', async () => {
+            const novncLink = document.getElementById('novncLink');
+            if (novncLink) {
+                novncLink.href = getNoVncUrl();
+            }
+
+            // Check if cookies already exist
+            try {
+                const response = await fetch('/api/cookies/check');
+                const data = await response.json();
+
+                if (data.exists) {
+                    showStatus("✅ Cookies already saved. You can configure the integration in Home Assistant.", "success");
+                }
+            } catch (error) {
+                // Ignore errors on initial check
+            }
+        });
+
         async function startAuth() {
             const button = document.getElementById('authButton');
             const status = document.getElementById('status');
 
             button.disabled = true;
-            button.innerHTML = '<div class="loader"></div><span>Démarrage...</span>';
+            button.innerHTML = '<div class="loader"></div><span>Starting...</span>';
 
             try {
-                showStatus("🔄 Démarrage de l'authentification...", "info");
+                showStatus("🔄 Starting authentication...", "info");
 
                 const response = await fetch('/api/auth/start', {
                     method: 'POST'
                 });
 
                 if (!response.ok) {
-                    throw new Error("Échec du démarrage de l'authentification");
+                    throw new Error("Failed to start authentication");
                 }
 
                 const data = await response.json();
                 sessionId = data.session_id;
 
-                showStatus("🌐 Fenêtre du navigateur ouverte. Veuillez vous connecter à Google...", "info");
-                button.innerHTML = '<div class="loader"></div><span>En attente de connexion...</span>';
+                const novncUrl = getNoVncUrl();
+                showStatusHtml(`🌐 Browser launched inside container.<br><strong>👉 <a href="${novncUrl}" target="_blank" style="color: #0c5460;">Open noVNC viewer</a> to sign in to Google.</strong><br><small>Password: <code>familylink</code></small>`, "info");
+                button.innerHTML = '<div class="loader"></div><span>Waiting for login...</span>';
 
                 // Start checking status
                 statusCheckInterval = setInterval(checkAuthStatus, 2000);
 
             } catch (error) {
-                showStatus("❌ Échec du démarrage: " + error.message, "error");
+                showStatus("❌ Failed to start: " + error.message, "error");
                 button.disabled = false;
-                button.innerHTML = 'Réessayer';
+                button.innerHTML = '🔄 Retry';
             }
         }
 
@@ -298,27 +328,27 @@ async def index():
 
                 if (data.status === 'completed') {
                     clearInterval(statusCheckInterval);
-                    showStatus(`✅ Authentification réussie! ${data.cookie_count} cookies sauvegardés.\\n\\nVous pouvez maintenant terminer la configuration dans Home Assistant.`, 'success');
+                    showStatus(`✅ Authentication successful! ${data.cookie_count} cookies saved. You can now finish configuration in Home Assistant.`, 'success');
 
                     const button = document.getElementById('authButton');
-                    button.innerHTML = '✓ Authentification terminée';
+                    button.innerHTML = '✅ Authentication Complete';
                     button.style.background = '#28a745';
 
                 } else if (data.status === 'timeout') {
                     clearInterval(statusCheckInterval);
-                    showStatus("⏱️ Délai d'attente dépassé. Veuillez réessayer.", "error");
+                    showStatus("⏱️ Authentication timed out. Please try again.", "error");
 
                     const button = document.getElementById('authButton');
                     button.disabled = false;
-                    button.innerHTML = "Réessayer l'authentification";
+                    button.innerHTML = "🔄 Retry Authentication";
 
                 } else if (data.status === 'error') {
                     clearInterval(statusCheckInterval);
-                    showStatus("❌ Erreur: " + (data.error || "Erreur inconnue"), "error");
+                    showStatus("❌ Error: " + (data.error || "Unknown error"), "error");
 
                     const button = document.getElementById('authButton');
                     button.disabled = false;
-                    button.innerHTML = "Réessayer l'authentification";
+                    button.innerHTML = "🔄 Retry Authentication";
                 }
 
             } catch (error) {
@@ -333,19 +363,12 @@ async def index():
             status.style.display = 'block';
         }
 
-        // Check if cookies already exist
-        window.addEventListener('load', async () => {
-            try {
-                const response = await fetch('/api/cookies/check');
-                const data = await response.json();
-
-                if (data.exists) {
-                    showStatus("✓ Des cookies sont déjà enregistrés. Vous pouvez configurer l'intégration dans Home Assistant.", "success");
-                }
-            } catch (error) {
-                // Ignore errors on initial check
-            }
-        });
+        function showStatusHtml(html, type) {
+            const status = document.getElementById('status');
+            status.innerHTML = html;
+            status.className = `status ${type}`;
+            status.style.display = 'block';
+        }
     </script>
 </body>
 </html>
