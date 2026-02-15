@@ -306,7 +306,7 @@ This integration uses reverse-engineered Google Family Link API endpoints:
 
 **Solution**:
 1. Open add-on Web UI (port 8099)
-2. Click "Démarrer l'authentification"
+2. Click **"Start Authentication"**
 3. Complete Google login
 4. Integration automatically picks up new cookies
 

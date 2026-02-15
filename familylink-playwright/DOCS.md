@@ -75,12 +75,12 @@ session_duration: 86400  # Cookies valid for 24 hours
 ### Step 4: Authenticate
 
 1. Click **Open Web UI** or navigate to `http://[YOUR_HA]:8099`
-2. Click "Démarrer l'authentification"
-3. Browser window opens automatically
-4. Sign in to Google
+2. Click **"Start Authentication"**
+3. Open the noVNC viewer in your browser: `http://[YOUR_HA]:6080/vnc.html` (password: `familylink`)
+4. Sign in to Google in the noVNC viewer
 5. Complete 2FA if required
-6. Wait for success message
-7. Close add-on UI
+6. Wait for the success message on the web UI (port 8099)
+7. Close both tabs
 
 ### Step 5: Configure Integration
 
@@ -207,13 +207,15 @@ Delete stored cookies
 
 #### Browser Window Doesn't Appear
 
-**Symptom**: Authentication starts but no browser window
+**Symptom**: Authentication starts but no browser window opens on your computer
 
-**Solutions**:
-1. Check add-on logs: `[INFO] Navigating to Google Family Link...`
-2. Browser opens on add-on's display, not yours (by design)
-3. This is normal - the browser runs inside the container
-4. Monitor status through web interface instead
+**This is expected!** The browser runs inside the Docker container, not on your machine.
+
+**Solution**: Open the noVNC viewer in your web browser to see and interact with it:
+1. Navigate to `http://[YOUR_HA]:6080/vnc.html`
+2. Enter password: `familylink`
+3. You'll see the Chromium browser with the Google login page
+4. No additional software needed — works in any modern browser
 
 #### Authentication Timeout
 

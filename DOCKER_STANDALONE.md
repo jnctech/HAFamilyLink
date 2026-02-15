@@ -12,7 +12,7 @@ The Family Link Auth addon can run as a standalone Docker container, making it c
 ## 📋 Prerequisites
 
 - Docker installed on your system
-- Docker Compose (optional, but recommended)
+- Docker Compose V2 (`docker compose` plugin, included with modern Docker)
 - Network access from your Home Assistant instance to the addon container
 
 ## ⚠️ Important Note
@@ -26,11 +26,11 @@ The standalone deployment uses a **different Dockerfile** (`Dockerfile.standalon
 
 ### Option 1: Using Pre-built Image (Easiest - Recommended for v0.9.2+)
 
-1. **Download the docker-compose file:**
+1. **Download the docker compose file:**
 
 ```bash
 mkdir familylink-auth && cd familylink-auth
-curl -O https://raw.githubusercontent.com/noiwid/HAFamilyLink/main/familylink-playwright/docker-compose.standalone.yml
+curl -O https://raw.githubusercontent.com/noiwid/HAFamilyLink/main/familylink-playwright/docker compose.standalone.yml
 ```
 
 2. **Create data directory:**
@@ -42,7 +42,7 @@ mkdir -p ./data
 3. **Start the container:**
 
 ```bash
-docker-compose -f docker-compose.standalone.yml up -d
+docker compose -f docker compose.standalone.yml up -d
 ```
 
 This will pull the pre-built `ghcr.io/noiwid/familylink-auth:standalone` image which is built specifically for standalone Docker (no bashio).
@@ -56,7 +56,7 @@ git clone https://github.com/noiwid/HAFamilyLink.git
 cd HAFamilyLink/familylink-playwright
 ```
 
-2. **Edit docker-compose.standalone.yml** to use local build:
+2. **Edit docker compose.standalone.yml** to use local build:
 
 ```yaml
 # Comment out the image line:
@@ -72,7 +72,7 @@ build:
 
 ```bash
 mkdir -p ./data
-docker-compose -f docker-compose.standalone.yml up -d --build
+docker compose -f docker compose.standalone.yml up -d --build
 ```
 
 4. **Access the web interface:**
@@ -163,7 +163,7 @@ The addon stores **encrypted** cookies in `/share/familylink/cookies.enc` and th
 Mount the familylink data directory into your Home Assistant container:
 
 ```yaml
-# docker-compose.yml for Home Assistant
+# docker compose.yml for Home Assistant
 services:
   homeassistant:
     # ... other config ...
@@ -264,7 +264,7 @@ s6-rc: warning: unable to start service base-addon-banner: command exited 1
 
 ```bash
 cd familylink-playwright
-docker-compose -f docker-compose.standalone.yml up -d --build
+docker compose -f docker compose.standalone.yml up -d --build
 ```
 
 This uses `Dockerfile.standalone` which doesn't require Home Assistant Supervisor or bashio.
@@ -313,12 +313,12 @@ The easiest fix is to configure the auth server URL manually during integration 
 If you prefer using shared volumes:
 
 ```bash
-# For Container: Add volume mount to docker-compose.yml
+# For Container: Add volume mount to docker compose.yml
 # Add this to your homeassistant service volumes:
 #   - ./familylink-data:/share/familylink:ro
 
 # Then recreate the container:
-docker-compose up -d homeassistant
+docker compose up -d homeassistant
 ```
 
 ### Container Health Check Failing
@@ -336,8 +336,8 @@ curl http://localhost:8099/api/health
 ### Using Docker Compose
 
 ```bash
-docker-compose pull
-docker-compose up -d
+docker compose pull
+docker compose up -d
 ```
 
 ### Using Docker Run
