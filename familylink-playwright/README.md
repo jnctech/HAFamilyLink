@@ -63,7 +63,7 @@ This add-on runs a web server with Playwright browser automation to handle Googl
    - Or navigate to port 8099 in your browser
 
 3. **Authenticate**:
-   - Click "Démarrer l'authentification" (Start Authentication)
+   - Click **"Start Authentication"**
    - **Important**: The browser opens **inside the Docker container**, not on your computer
    - **Open noVNC in your browser** to see and interact with the browser:
      - **URL**: `http://[YOUR_HA_IP]:6080/vnc.html`
@@ -85,7 +85,7 @@ This add-on runs a web server with Playwright browser automation to handle Googl
 If your session expires or you need to re-authenticate:
 
 1. Open the add-on web interface
-2. Click "Démarrer l'authentification" again
+2. Click **"Start Authentication"** again
 3. Complete the Google login
 4. The integration will automatically pick up the new cookies
 

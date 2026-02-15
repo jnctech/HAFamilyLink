@@ -79,8 +79,8 @@ class BrowserAuthManager:
             context = await browser.new_context(
                 user_agent='Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/120.0.0.0 Safari/537.36',
                 viewport={'width': 1280, 'height': 800},
-                locale='fr-FR',
-                timezone_id='Europe/Paris'
+                locale='en-US',
+                timezone_id='America/New_York'
             )
 
             # Create page
@@ -107,7 +107,7 @@ class BrowserAuthManager:
             # Using 'load' instead of 'networkidle' for better reliability
             # 'networkidle' can timeout on pages with continuous background requests
             _LOGGER.info("Navigating to Google Family Link...")
-            await page.goto('https://families.google.com', wait_until='load', timeout=30000)
+            await page.goto('https://families.google.com/?hl=en', wait_until='load', timeout=30000)
 
             # Start monitoring in background
             asyncio.create_task(self._monitor_authentication(session_id))

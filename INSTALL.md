@@ -94,7 +94,7 @@ The add-on handles Google authentication using Playwright browser automation.
 - You should see the Family Link Auth interface
 
 **Step 2: Start Authentication**
-- Click "Démarrer l'authentification" (Start Authentication)
+- Click **"Start Authentication"**
 - The Chromium browser launches inside the add-on container
 - You need to open the noVNC viewer to see it! 🖥️
 
@@ -335,7 +335,7 @@ To verify cookies were loaded successfully, check the Home Assistant logs:
 **Solution:**  
 1. Cookies may have expired ⏳  
 2. Open add-on Web UI (`http://[YOUR_HA_IP]:8099`)  
-3. Click "Démarrer l'authentification"  
+3. Click **"Start Authentication"**
 4. Complete Google login again  
 5. Wait for success message  
 6. Reload integration in Home Assistant
@@ -380,7 +380,7 @@ To verify cookies were loaded successfully, check the Home Assistant logs:
 Cookies expire periodically. To re-authenticate:
 
 1. Open add-on Web UI: `http://[YOUR_HA_IP]:8099`  
-2. Click **"Démarrer l'authentification"**  
+2. Click **"Start Authentication"**
 3. Complete Google login flow  
 4. Wait for success message  
 5. Integration auto-loads new cookies (no reload needed) ✅
