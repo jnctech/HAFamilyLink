@@ -22,11 +22,9 @@ Google Family Link Integration for Home Assistant 👨‍👩‍👧‍👦
 - This integration requires Home Assistant add-ons  
 - Not compatible with Home Assistant Container or Core (without Supervisor)
 
-**VNC Client (REQUIRED)** 🖥️  
-- Windows/Mac/Linux: [TightVNC](https://www.tightvnc.com/), [RealVNC](https://www.realvnc.com/), or any VNC viewer  
-- iOS: VNC Viewer (App Store)  
-- Android: VNC Viewer (Google Play)  
-- Why? Required to access the browser during Google authentication 🔐
+**Web Browser** 🖥️
+- Any modern web browser (Chrome, Firefox, Safari, Edge)
+- Why? Required to access the browser session via noVNC during Google authentication 🔐
 
 **Minimum System Requirements** 📦  
 - 1GB RAM (for Playwright browser automation)  
@@ -91,39 +89,36 @@ The add-on handles Google authentication using Playwright browser automation.
 
 ### 1.5 Authenticate with Google 🔐
 
-**Important: You MUST use a VNC client to complete authentication!**
-
-**Step 1: Open the add-on web interface**  
-- Click "Open Web UI" (or navigate to `http://[YOUR_HA_IP]:8099`)  
+**Step 1: Open the add-on web interface**
+- Click "Open Web UI" (or navigate to `http://[YOUR_HA_IP]:8099`)
 - You should see the Family Link Auth interface
 
-**Step 2: Start Authentication**  
-- Click "Démarrer l'authentification" (Start Authentication)  
-- The Chromium browser launches inside the add-on container  
-- You cannot see it directly - you need VNC! 🖥️
+**Step 2: Start Authentication**
+- Click "Démarrer l'authentification" (Start Authentication)
+- The Chromium browser launches inside the add-on container
+- You need to open the noVNC viewer to see it! 🖥️
 
-**Step 3: Connect via VNC**  
-- Open your VNC client (TightVNC, RealVNC, VNC Viewer, etc.)  
-- **Address**: `[YOUR_HA_IP]:5900` (or just `[YOUR_HA_IP]` and port `5900`)  
-- **Password**: `familylink`  
+**Step 3: Open noVNC in your browser**
+- Navigate to `http://[YOUR_HA_IP]:6080/vnc.html`
+- Enter password: `familylink`
 - Click **Connect**
+- You should see the Chromium browser with the Google login page
 
-**Step 4: Complete Google Login in VNC**  
-- Enter your Google account email > Click **Next**  
-- Enter your password > Click **Next**  
-- Complete 2FA if prompted (SMS code, authenticator app, push notification, etc.)  
-- Grant permissions if asked  
-- **Keep the VNC window open** until you see the Family Link dashboard 🧭
+**Step 4: Complete Google Login**
+- Enter your Google account email > Click **Next**
+- Enter your password > Click **Next**
+- Complete 2FA if prompted (SMS code, authenticator app, push notification, etc.)
+- Grant permissions if asked
+- **Keep the noVNC tab open** until you see the Family Link dashboard 🧭
 
 **Step 5: Verify Success**
 - The web interface (port 8099) will show "Authentication successful" ✅
 - The add-on extracts cookies and saves them to `/share/familylink/cookies.enc` (encrypted) 🍪
-- You can now close the VNC connection
+- You can now close the noVNC tab
 
-**Important Notes:** ⚠️  
-- The VNC session timeout is 5 minutes (configurable in add-on settings)  
-- If authentication fails, restart the add-on and try again 🔁  
-- The VNC password is always `familylink` (cannot be changed)
+**Important Notes:** ⚠️
+- The session timeout is 5 minutes (configurable in add-on settings)
+- If authentication fails, restart the add-on and try again 🔁
 
 ### 1.6 Verify Authentication 🧪
 
