@@ -10,11 +10,11 @@
   "init": false,
   "ports": {
     "8099/tcp": 8099,
-    "5900/tcp": 5900
+    "6080/tcp": 6080
   },
   "ports_description": {
     "8099/tcp": "Web interface for Google authentication",
-    "5900/tcp": "VNC server for browser access"
+    "6080/tcp": "noVNC web interface for browser access"
   },
   "map": ["share:rw"],
   "options": {

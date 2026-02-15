@@ -38,10 +38,14 @@ sleep 2
 # Start window manager
 fluxbox &
 
-# Start VNC server for remote access
-bashio::log.info "Starting VNC server on port 5900..."
-bashio::log.info "VNC password: familylink"
-x11vnc -display :99 -forever -shared -rfbport 5900 -passwd familylink &
+# Start VNC server (localhost only, used by noVNC)
+bashio::log.info "Starting VNC backend on localhost:5900..."
+x11vnc -display :99 -forever -shared -rfbport 5900 -passwd familylink -localhost &
+
+# Start noVNC (web-based VNC viewer)
+bashio::log.info "Starting noVNC on port 6080..."
+websockify --web=/usr/share/novnc 6080 localhost:5900 &
+bashio::log.info "noVNC available at http://[HOST]:6080/vnc.html"
 
 bashio::log.info "Starting FastAPI application..."
 
