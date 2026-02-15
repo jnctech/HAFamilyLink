@@ -28,6 +28,8 @@ RUN apt-get update \
         xvfb \
         x11vnc \
         fluxbox \
+        novnc \
+        python3-websockify \
     && apt-get clean \
     && rm -rf /var/lib/apt/lists/*
 
@@ -62,7 +64,7 @@ RUN mkdir -p /share/familylink && \
     chmod 700 /share/familylink
 
 # Expose ports
-EXPOSE 8099 5900
+EXPOSE 8099 6080
 
 # Health check
 HEALTHCHECK --interval=30s --timeout=10s --start-period=30s --retries=3 \
