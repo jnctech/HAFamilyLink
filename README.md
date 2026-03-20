@@ -6,6 +6,16 @@
 
 A comprehensive Home Assistant integration for monitoring and controlling Google Family Link devices. Track screen time, manage time limits, control bedtime/school schedules, and manage time bonuses directly from Home Assistant.
 
+## Fork Status
+
+This is a **fork** of [noiwid/HAFamilyLink](https://github.com/noiwid/HAFamilyLink). The main changes in this fork were:
+
+- **noVNC web access** (PR #1/#2, Feb 2026) — Replaced raw x11vnc (port 5900) with noVNC + websockify (port 6080) so users no longer need a VNC client
+- **English localization** (PR #4, #6) — Translated French UI text and docs to English, set browser locale to `en-US`
+- **Docker Compose local build + DNS** (PR #5) — Switched to local Dockerfile build with Google DNS for Pi-hole compatibility
+
+**Upstream has since adopted equivalent changes** (Mar 15, 2026) including noVNC, DNS config, and i18n (with proper FR/EN auto-detection). This fork is no longer actively maintained — **consider switching to upstream** at [noiwid/HAFamilyLink](https://github.com/noiwid/HAFamilyLink) for the latest features and fixes.
+
 ## 🚨 Important Disclaimer
 
 This integration uses unofficial, reverse-engineered Google Family Link API endpoints. **Use at your own risk**. This may violate Google's Terms of Service and could result in account suspension. This project is not affiliated with, endorsed by, or connected to Google LLC.
